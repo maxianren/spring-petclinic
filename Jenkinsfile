@@ -1,21 +1,12 @@
 pipeline {
     agent any
-    environment {
-        DOCKER = '/usr/local/bin/docker' // Replace with the correct path to the Docker binary on your Jenkins server
-    }
 
     stages {
         stage('Prepare') {
             steps {
                 script {
-        		def dockerHome = tool 'myDocker'
-        		env.PATH = "${dockerHome}/bin:${env.PATH}"
-
-                    def dockerImage = docker.image('openjdk:17-jdk')
-                    dockerImage.pull()
-                    dockerImage.inside {
-                        sh './mvnw clean install'
-                    }
+                    sh 'docker pull openjdk:17-jdk'
+                    sh 'docker run --rm -v $(pwd):/app -w /app openjdk:17-jdk ./mvnw clean install'
                 }
             }
         }
