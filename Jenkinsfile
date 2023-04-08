@@ -4,7 +4,9 @@ pipeline {
             image 'openjdk:17-jdk'
         }
     }
-
+    environment {
+        PATH = "/usr/local/bin:$PATH"
+    }
     stages {
         stage('Build') {
             steps {
@@ -28,4 +30,3 @@ pipeline {
         }
     }
 }
-
