@@ -1,11 +1,14 @@
 pipeline {
     agent any
+    environment {
+        DOCKER = '/path/to/docker' // Replace with the correct path to the Docker binary on your Jenkins server
+    }
 
     stages {
         stage('Prepare') {
             steps {
                 script {
-                    docker.withRegistry('') {
+                    docker.withRegistry('', '', {toolName: 'Docker'}) {
                         def dockerImage = docker.image('openjdk:17-jdk')
                         dockerImage.pull()
                         dockerImage.inside {
