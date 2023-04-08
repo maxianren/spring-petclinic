@@ -5,13 +5,12 @@ pipeline {
     }
 
     stages {
- 	stage('Initialize'){
-        	def dockerHome = tool 'myDocker'
-        	env.PATH = "${dockerHome}/bin:${env.PATH}"
-    	}
         stage('Prepare') {
             steps {
                 script {
+        		def dockerHome = tool 'myDocker'
+        		env.PATH = "${dockerHome}/bin:${env.PATH}"
+
                     def dockerImage = docker.image('openjdk:17-jdk')
                     dockerImage.pull()
                     dockerImage.inside {
