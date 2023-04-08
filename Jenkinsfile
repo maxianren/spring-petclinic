@@ -8,12 +8,10 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    docker.withRegistry('', '', {toolName: 'Docker'}) {
-                        def dockerImage = docker.image('openjdk:17-jdk')
-                        dockerImage.pull()
-                        dockerImage.inside {
-                            sh './mvnw clean install'
-                        }
+                    def dockerImage = docker.image('openjdk:17-jdk')
+                    dockerImage.pull()
+                    dockerImage.inside {
+                        sh './mvnw clean install'
                     }
                 }
             }
