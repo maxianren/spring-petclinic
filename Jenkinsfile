@@ -5,8 +5,13 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    sh 'docker pull openjdk:17-jdk'
-                    sh 'docker run --rm -v $(pwd):/app -w /app openjdk:17-jdk ./mvnw clean install'
+                    docker.withTool('myDocker') {
+                        def dockerImage = docker.image('openjdk:17-jdk')
+                        dockerImage.pull()
+                        dockerImage.inside {
+                            sh './mvnw clean install'
+                        }
+                    }
                 }
             }
         }
