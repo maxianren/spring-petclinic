@@ -1,34 +1,41 @@
 pipeline {
-    agent any
-    environment {
-        DOCKER = '/path/to/docker' // Replace with the correct path to the Docker binary on your Jenkins server
-    }
+    agent none
 
     stages {
-        stage('Prepare') {
+        stage('Checkout') {
+            agent any
             steps {
-                script {
-                    docker.withRegistry('', '', {toolName: 'Docker'}) {
-                        def dockerImage = docker.image('openjdk:17-jdk')
-                        dockerImage.pull()
-                        dockerImage.inside {
-                            sh './mvnw clean install'
-                        }
-                    }
-                }
+                checkout scm
             }
         }
-        stage('Static Analysis with SonarQube') {
+
+        stage('Docker Build and Test') {
+            agent {
+                docker {
+                    image 'openjdk:17-jdk'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
-                script {
-                    def scannerHome = tool 'SonarQube Scanner';
-                    withSonarQubeEnv('PetclinicSQ') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                echo 'Inside Docker container'
+
+                stage('Prepare') {
+                    steps {
+                        echo 'Preparing...'
+                        // Your preparation steps here
+                    }
+                }
+
+                stage('Static Analysis with SonarQube') {
+                    steps {
+                        echo 'Running SonarQube analysis...'
+                        // Your SonarQube steps here
                     }
                 }
             }
         }
     }
+
     post {
         always {
             deleteDir()
