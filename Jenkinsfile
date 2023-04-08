@@ -19,15 +19,15 @@ pipeline {
             steps {
                 echo 'Inside Docker container'
 
-                stage('Prepare') {
-                    steps {
+                script {
+                    stage('Prepare') {
                         echo 'Preparing...'
                         // Your preparation steps here
                     }
                 }
 
-                stage('Static Analysis with SonarQube') {
-                    steps {
+                script {
+                    stage('Static Analysis with SonarQube') {
                         echo 'Running SonarQube analysis...'
                         // Your SonarQube steps here
                     }
