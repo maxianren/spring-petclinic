@@ -1,16 +1,18 @@
 pipeline {
-    agent {
-        docker {
-            image 'openjdk:17-jdk'
-        }
-    }
-    environment {
-        PATH = "/usr/local/bin:$PATH"
-    }
+    agent any
+
     stages {
-        stage('Build') {
+        stage('Prepare') {
             steps {
-                sh './mvnw clean install'
+                script {
+                    docker.withRegistry('') {
+                        def dockerImage = docker.image('openjdk:17-jdk')
+                        dockerImage.pull()
+                        dockerImage.inside {
+                            sh './mvnw clean install'
+                        }
+                    }
+                }
             }
         }
         stage('Static Analysis with SonarQube') {
