@@ -1,21 +1,34 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     stages {
         stage('Prepare') {
             steps {
                 script {
-                    withEnv(["PATH+DOCKER=/usr/local/bin"]) {
-                        def dockerImage = docker.image('openjdk:17-jdk')
-                        dockerImage.pull()
-                        dockerImage.inside {
-                            sh './mvnw clean install -DskipTests'
-                        }
+                    def dockerImage = docker.image('openjdk:17-jdk')
+                    dockerImage.pull()
+                    dockerImage.inside {
+                        sh './mvnw clean install -DskipTests'
                     }
                 }
             }
         }
-        // Include other stages like SonarQube analysis, etc.
+        stage('Static Analysis with SonarQube') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarQube Scanner';
+                    withSonarQubeEnv('PetclinicSQ') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
+        // Add other stages as needed
     }
 
     post {
