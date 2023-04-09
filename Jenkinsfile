@@ -1,20 +1,18 @@
 pipeline {
-    agent {
-        docker {
-            image 'openjdk:17-jdk'
-            label 'myDocker'
-        }
-    }
+    agent any
 
     stages {
         stage('Prepare') {
             steps {
-                checkout scm
-            }
-        }
-        stage('Build') {
-            steps {
-                sh './mvnw clean install -DskipTests'
+                script {
+                    docker.withTool('myDocker') {
+                        def dockerImage = docker.image('openjdk:17-jdk')
+                        dockerImage.pull()
+                        dockerImage.inside {
+                            sh './mvnw clean install -DskipTests'
+                        }
+                    }
+                }
             }
         }
         stage('Static Analysis with SonarQube') {
