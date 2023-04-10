@@ -1,17 +1,19 @@
 pipeline {
-    agent {
-        docker {
-            image 'openjdk:17-jdk'
-        }
-    }
+    agent none
 
     stages {
         stage('Prepare') {
+            agent {
+                docker {
+                    build 'openjdk-custom'
+                }
+            }
             steps {
                 sh './mvnw clean install'
             }
         }
         stage('Static Analysis with SonarQube') {
+            agent any
             steps {
                 script {
                     def scannerHome = tool 'SonarQube Scanner'
