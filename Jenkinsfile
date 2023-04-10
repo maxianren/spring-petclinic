@@ -2,11 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Prepare') {
-            steps {
-                sh './mvnw clean install'
-            }
-        }
+
         stage('Static Analysis with SonarQube') {
             steps {
                 script {
