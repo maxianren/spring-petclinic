@@ -1,8 +1,9 @@
 pipeline {
+    agent any
     agent {
         docker {
-            image 'docker'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
+            image 'openjdk:17-jdk'
+            label 'myDocker'
         }
     }
 
@@ -10,12 +11,20 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    def dockerImage = docker.image('openjdk:17-jdk')
-                    dockerImage.pull()
-                    dockerImage.inside {
-                        sh './mvnw clean install -DskipTests'
+                    docker.withTool('myDocker') {
+                        def dockerImage = docker.image('openjdk:17-jdk')
+                        dockerImage.pull()
+                        dockerImage.inside {
+                            sh './mvnw clean install'
+                        }
                     }
                 }
+                checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                sh './mvnw clean install -DskipTests'
             }
         }
         stage('Static Analysis with SonarQube') {
@@ -28,9 +37,7 @@ pipeline {
                 }
             }
         }
-        // Add other stages as needed
     }
-
     post {
         always {
             deleteDir()
