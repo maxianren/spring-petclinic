@@ -1,18 +1,14 @@
 pipeline {
     agent {
-        dockerfile {
-            filename 'Dockerfile'
-
+        docker {
+            image 'openjdk:17-jdk'
         }
     }
 
     stages {
         stage('Prepare') {
             steps {
-                sh 'docker pull openjdk:17-jdk'
-                sh '''
-                    docker run --rm -v $(pwd):/workspace -w /workspace openjdk:17-jdk /bin/sh -c "./mvnw clean install"
-                '''
+                sh './mvnw clean install'
             }
         }
         stage('Static Analysis with SonarQube') {
