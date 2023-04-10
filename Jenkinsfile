@@ -7,7 +7,7 @@ pipeline {
             steps {
                 script {
                     def scannerHome = tool 'SonarQube'
-                    withSonarQubeEnv('SonarQube', 'http://sonarqube:9000') {
+                    withSonarQubeEnv('SonarQube') {
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
