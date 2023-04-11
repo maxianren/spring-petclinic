@@ -9,12 +9,11 @@ pipeline {
         }
         stage('Build') {
             steps {
-                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}"]) {
+                withEnv(["JAVA_HOME=${env.JAVA_HOME}"]) {
                     sh 'mvn clean install -DskipTests'
                 }
             }
         }
-
         stage('Static Analysis with SonarQube') {
             steps {
                 script {
