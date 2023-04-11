@@ -20,9 +20,11 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarQube'
                     withSonarQubeEnv('SonarQube') {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=sqa_c29f79fe99ec6b22cc7ed1cd1852b8baefb72a4a \
-                        -Dsonar.projectKey=mycompany:myproject \
-                        -Dsonar.java.binaries=target/classes"
+                        nodejs(nodeJSInstallationName: 'NodeJS 19.9.0') {
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=sqa_c29f79fe99ec6b22cc7ed1cd1852b8baefb72a4a \
+                            -Dsonar.projectKey=mycompany:myproject \
+                            -Dsonar.java.binaries=target/classes"
+                        }
                     }
                 }
             }
