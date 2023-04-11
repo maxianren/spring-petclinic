@@ -7,8 +7,8 @@ pipeline {
                 withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}"]) {
                     sh 'mvn clean install -DskipTests'
                 }
+            }
         }
-
         stage('Static Analysis with SonarQube') {
             steps {
                 script {
