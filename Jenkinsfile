@@ -21,7 +21,6 @@ pipeline {
                 }
             }
         }
-    }
 stage('Run Application') {
     steps {
         sh 'java -jar target/*.jar &'
@@ -34,4 +33,8 @@ stage('Run Application') {
         }
     }
 }
+
+    }
+
+
 }
