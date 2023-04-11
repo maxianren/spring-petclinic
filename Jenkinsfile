@@ -49,10 +49,10 @@ stage('Run PetClinic') {
 }
 
     }
-    post {
-        always {
-            sh 'pkill -f spring-petclinic'
-            deleteDir()
-        }
+post {
+    always {
+        sh 'pkill -f spring-petclinic || true'
+        deleteDir()
     }
+}
 }
