@@ -21,7 +21,7 @@ pipeline {
                     def scannerHome = tool 'SonarQube'
                     withSonarQubeEnv('SonarQube') {
                         nodejs(nodeJSInstallationName: 'NodeJS 14.x') {
-                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=sqa_c29f79fe99ec6b22cc7ed1cd1852b8baefb72a4a \
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=sqa_3ee354eba574d5d565617d1f905fa695084b350e \
                             -Dsonar.projectKey=mycompany:myproject \
                             -Dsonar.java.binaries=target/classes \
                 	-Dsonar.file.ignoreFiles=50 \
