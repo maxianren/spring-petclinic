@@ -33,7 +33,6 @@ pipeline {
             }
         }
 stage('Run PetClinic') {
-stage('Run PetClinic') {
     steps {
         withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
             sh 'java -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 &'
