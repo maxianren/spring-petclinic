@@ -14,12 +14,7 @@ pipeline {
                 }
             }
         }
-        stage('Install Node.js') {
-            steps {
-                sh 'curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -'
-                sh 'sudo apt-get install -y nodejs'
-            }
-        }
+
         stage('Static Analysis with SonarQube') {
             steps {
                 script {
