@@ -24,7 +24,7 @@ pipeline {
 stage('Run Application') {
     steps {
         withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}"]) {
-            sh 'java -jar target/*.jar &'
+            sh '${JAVA_HOME}/bin/java -jar target/*.jar &'
             timeout(time: 1, unit: 'MINUTES') {
                 waitUntil {
                     script {
@@ -35,6 +35,7 @@ stage('Run Application') {
         }
     }
 }
+
 
     }
 
