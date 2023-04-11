@@ -1,23 +1,47 @@
-version: "2.2"
+# version: "2.2"
+# 
+# services:
+#   mysql:
+#     image: mysql:8.0
+#     ports:
+#       - "3306:3306"
+#     environment:
+#       - MYSQL_ROOT_PASSWORD=
+#       - MYSQL_ALLOW_EMPTY_PASSWORD=true
+#       - MYSQL_USER=petclinic
+#       - MYSQL_PASSWORD=petclinic
+#       - MYSQL_DATABASE=petclinic
+#     volumes:
+#       - "./conf.d:/etc/mysql/conf.d:ro"
+#   postgres:
+#     image: postgres:15.2
+#     ports:
+#       - "5432:5432"
+#     environment:
+#       - POSTGRES_PASSWORD=petclinic
+#       - POSTGRES_USER=petclinic
+#       - POSTGRES_DB=petclinic
+
+version: '3.7'
 
 services:
-  mysql:
-    image: mysql:8.0
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-      - MYSQL_USER=petclinic
-      - MYSQL_PASSWORD=petclinic
-      - MYSQL_DATABASE=petclinic
+      - 8080:8080
     volumes:
-      - "./conf.d:/etc/mysql/conf.d:ro"
-  postgres:
-    image: postgres:15.2
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  sonarqube:
+    image: sonarqube:lts
     ports:
-      - "5432:5432"
+      - 9000:9000
     environment:
-      - POSTGRES_PASSWORD=petclinic
-      - POSTGRES_USER=petclinic
-      - POSTGRES_DB=petclinic
+      - sonar.jdbc.username=sonar
+      - sonar.jdbc.password=sonar
+
+volumes:
+  postgres-data:
+
