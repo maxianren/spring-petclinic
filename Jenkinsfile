@@ -29,21 +29,22 @@ pipeline {
                 }
             }
         }
-        stage('Run PetClinic') {
-            steps {
-                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}"]) {
-                    sh 'java -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar &'
-                    timeout(time: 1, unit: 'MINUTES') {
-                        waitUntil {
-                            script {
-                                def result = sh(script: 'curl --silent --fail http://localhost:8080', returnStatus: true)
-                                return (result == 0)
-                            }
-                        }
+stage('Run PetClinic') {
+    steps {
+        withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
+            sh 'java -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar &'
+            timeout(time: 1, unit: 'MINUTES') {
+                waitUntil {
+                    script {
+                        def result = sh(script: 'curl --silent --fail http://localhost:8080', returnStatus: true)
+                        return (result == 0)
                     }
                 }
             }
         }
+    }
+}
+
     }
     post {
         always {
