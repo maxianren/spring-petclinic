@@ -25,7 +25,7 @@ pipeline {
                             -Dsonar.projectKey=mycompany:myproject \
                             -Dsonar.java.binaries=target/classes \
                 	-Dsonar.file.ignoreFiles=50 \
-                	-Dsonar.java.libraries=target/spring-petclinic-3.0.0-SNAPSHOT.jar \
+                	-Dsonar.java.libraries=target/lib/**/*.jar \
                 	-Dsonar.sourceEncoding=UTF-8"
                         }
                     }
