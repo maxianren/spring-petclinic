@@ -22,9 +22,16 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            deleteDir()
+stage('Run Application') {
+    steps {
+        sh 'java -jar target/*.jar &'
+        timeout(time: 1, unit: 'MINUTES') {
+            waitUntil {
+                script {
+                    sh(script: 'curl --silent --fail http://localhost:8080', returnStatus: true) == 0
+                }
+            }
         }
     }
+}
 }
