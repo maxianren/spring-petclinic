@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    tools {
-        jdk 'OpenJDK-17'
-    }
+
 
     stages {
         stage('Checkout') {
@@ -12,17 +10,10 @@ pipeline {
         }
         stage('Build') {
             steps {
-                script {
-                    def javaHome = tool 'OpenJDK-17'
-                    env.JAVA_HOME = javaHome
-                    env.PATH = "${javaHome}/bin:${env.PATH}"
+                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}"]) {
+                    sh 'mvn clean install -DskipTests'
                 }
-                sh 'java -version'
-                sh 'mvn -version'
-                sh 'mvn clean install -DskipTests'
-                
             }
-
         }
 
         stage('Static Analysis with SonarQube') {
