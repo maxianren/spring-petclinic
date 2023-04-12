@@ -9,10 +9,11 @@ pipeline {
         }
         stage('Build') {
             steps {
-                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}"]) {
-                    sh 'mvn clean install -DskipTests'
+                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH+JAVA=${env.JAVA_HOME}/bin"]) {
+                    sh 'mvn clean install -DskipTests --release 17'
                 }
             }
+
         }
 
         stage('Static Analysis with SonarQube') {
@@ -32,21 +33,21 @@ pipeline {
                 }
             }
         }
-stage('Run PetClinic') {
-    steps {
-        withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
-            sh 'java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 &'
-            timeout(time: 1, unit: 'MINUTES') {
-                waitUntil {
-                    script {
-                        def result = sh(script: 'curl --silent --fail http://localhost:8090', returnStatus: true)
-                        return (result == 0)
+        stage('Run PetClinic') {
+            steps {
+                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
+                    sh 'java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 &'
+                    timeout(time: 1, unit: 'MINUTES') {
+                        waitUntil {
+                            script {
+                                def result = sh(script: 'curl --silent --fail http://localhost:8090', returnStatus: true)
+                                return (result == 0)
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
 
 
     }
