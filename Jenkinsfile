@@ -36,7 +36,7 @@ pipeline {
                     timeout(time: 1, unit: 'MINUTES') {
                         waitUntil {
                             script {
-                                def result = sh(script: 'curl --silent --fail http://localhost:8090', returnStatus: true)
+                                def result = sh(script: 'curl --silent --fail http://172.19.0.3:8090', returnStatus: true)
                                 return (result == 0)
                             }
                         }
