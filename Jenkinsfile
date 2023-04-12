@@ -29,22 +29,22 @@ pipeline {
                 }
             }
         }
-        stage('Run PetClinic') {
-            steps {
-                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
-                    timeout(time: 10, unit: 'MINUTES') {
-                        sh 'java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090'
-                    }
-                }
+stage('Run PetClinic') {
+    steps {
+        script {
+            def appImage = docker.build('petclinic', 'target')
+            docker.withRegistry('', 'docker-credentials') {
+                appImage.push()
+            }
+            appImage.run('-p 8090:8090 --name petclinic').inside('-u root') {
+                sh 'java -Djava.awt.headless=true -jar /app/target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090'
             }
         }
-
-
-    }
-post {
-    always {
-        sh 'pkill -f spring-petclinic || true'
-        deleteDir()
     }
 }
+
+
+
+    }
+
 }
