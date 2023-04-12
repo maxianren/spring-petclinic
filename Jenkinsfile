@@ -3,15 +3,26 @@ pipeline {
 
 
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                checkout scm
+                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}"]) {
+                    sh 'mvn clean install -DskipTests'
+                }
             }
         }
         stage('Build') {
             steps {
-                sh './build.sh'
+                script {
+                    def javaHome = tool 'OpenJDK-17'
+                    env.JAVA_HOME = javaHome
+                    env.PATH = "${javaHome}/bin:${env.PATH}"
+                }
+                sh 'java -version'
+                sh 'mvn -version'
+                sh 'mvn clean install -DskipTests'
+                
             }
+
         }
 
         stage('Static Analysis with SonarQube') {
