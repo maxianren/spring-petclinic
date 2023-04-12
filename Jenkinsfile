@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-
     stages {
         stage('Checkout') {
             steps {
@@ -20,14 +19,11 @@ pipeline {
             steps {
                 script {
                     def scannerHome = tool 'SonarQube'
-                    withSonarQubeEnv('SonarQube') {
+                    withSonarQubeEnv('http://108.17.70.86:9000') {
                         nodejs(nodeJSInstallationName: 'NodeJS 14.x') {
                             sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=sqa_0b53b8ba19a9c540794f92039898753f17458859 \
                             -Dsonar.projectKey=mycompany:myproject \
-                            -Dsonar.java.binaries=target/classes \
-                	-Dsonar.file.ignoreFiles=50 \
-                	-Dsonar.java.libraries=target/lib/**/*.jar \
-                	-Dsonar.sourceEncoding=UTF-8"
+                            -Dsonar.java.binaries=target/classes"
                         }
                     }
                 }
