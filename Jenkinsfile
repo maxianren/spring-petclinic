@@ -32,14 +32,8 @@ pipeline {
         stage('Run PetClinic') {
             steps {
                 withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
-                    sh 'java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 &'
-                    timeout(time: 1, unit: 'MINUTES') {
-                        waitUntil {
-                            script {
-                                def result = sh(script: 'curl --silent --fail http://172.19.0.3:8090', returnStatus: true)
-                                return (result == 0)
-                            }
-                        }
+                    timeout(time: 10, unit: 'MINUTES') {
+                        sh 'java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090'
                     }
                 }
             }
