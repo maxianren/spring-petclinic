@@ -5,11 +5,9 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}"]) {
-                    sh 'mvn clean install -DskipTests'
-                }
+                checkout scm
             }
         }
         stage('Build') {
