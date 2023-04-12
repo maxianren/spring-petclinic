@@ -12,11 +12,15 @@ pipeline {
         }
         stage('Build') {
             steps {
-                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH+JAVA=${env.JAVA_HOME}/bin"]) {
-                    sh 'java -version'
-                    sh 'mvn -version'
-                    sh 'mvn clean install -DskipTests'
+                script {
+                    def javaHome = tool 'OpenJDK-17'
+                    env.JAVA_HOME = javaHome
+                    env.PATH = "${javaHome}/bin:${env.PATH}"
                 }
+                sh 'java -version'
+                sh 'mvn -version'
+                sh 'mvn clean install -DskipTests'
+                
             }
 
         }
