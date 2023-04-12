@@ -32,13 +32,12 @@ pipeline {
 stage('Run PetClinic') {
     steps {
         withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
-            sh 'java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 &'
-            sh 'echo "PetClinic Application started. Waiting for 60 seconds before checking availability."'
-            sh 'sleep 60'
-            // sh 'curl --silent --fail http://localhost:8090'
+            sh 'java -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -jar target/spring-petclinic-*.jar --server.port=8090 &'
+            // sh 'sleep 60'
         }
     }
 }
+
 
 
 
