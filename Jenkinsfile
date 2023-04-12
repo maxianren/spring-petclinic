@@ -31,9 +31,8 @@ pipeline {
         }
 stage('Run PetClinic') {
     steps {
-        script {
-            sh 'docker build -t petclinic .'
-            sh 'docker run -d -p 8090:8090 --name petclinic petclinic'
+        withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
+            sh 'java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 &'
             timeout(time: 1, unit: 'MINUTES') {
                 waitUntil {
                     script {
@@ -45,6 +44,7 @@ stage('Run PetClinic') {
         }
     }
 }
+
 
 
 
