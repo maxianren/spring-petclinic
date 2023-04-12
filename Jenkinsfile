@@ -32,11 +32,11 @@ pipeline {
 stage('Run PetClinic') {
     steps {
         withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
-            sh 'nohup java -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -jar target/spring-petclinic-*.jar --server.port=8090 > petclinic.log 2>&1 &'
-            sh 'sleep 60'
+            sh 'nohup java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 &'
         }
     }
 }
+
 
 
 
