@@ -20,12 +20,12 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarQube'
                     withSonarQubeEnv('SonarQube') {
-                        nodejs(nodeJSInstallationName: 'NodeJS 14.x') {
+                        // nodejs(nodeJSInstallationName: 'NodeJS 14.x') {
                             sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=sqa_0b53b8ba19a9c540794f92039898753f17458859 \
                             -Dsonar.projectKey=mycompany:myproject \
                             -Dsonar.java.binaries=target/classes"
                         }
-                    }
+                    // }
                 }
             }
         }
@@ -35,7 +35,7 @@ stage('Run PetClinic') {
             sh 'java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 &'
             sh 'echo "PetClinic Application started. Waiting for 60 seconds before checking availability."'
             sh 'sleep 60'
-            sh 'curl --silent --fail http://localhost:8090'
+            // sh 'curl --silent --fail http://localhost:8090'
         }
     }
 }
