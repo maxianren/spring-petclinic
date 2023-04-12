@@ -32,7 +32,7 @@ pipeline {
 stage('Run PetClinic') {
     steps {
         script {
-            sh 'docker build -t petclinic target/'
+            sh 'docker build -t petclinic .'
             sh 'docker run -d -p 8090:8090 --name petclinic petclinic'
             timeout(time: 1, unit: 'MINUTES') {
                 waitUntil {
@@ -45,6 +45,7 @@ stage('Run PetClinic') {
         }
     }
 }
+
 
 
 
