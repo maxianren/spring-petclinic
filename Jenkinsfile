@@ -31,12 +31,12 @@ pipeline {
         }
 stage('Run PetClinic') {
     steps {
-        withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH"]) {
-            sh 'java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 &'
-            sh 'echo $! > petclinic.pid'
+        withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH", "BUILD_ID=dontKillMe"]) {
+            sh 'nohup java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 > output.log 2>&1 &'
         }
     }
 }
+
 
 
 
