@@ -32,16 +32,20 @@ pipeline {
 stage('Run PetClinic') {
     steps {
         script {
-            def appImage = docker.build('petclinic', 'target')
-            docker.withRegistry('', 'docker-credentials') {
-                appImage.push()
-            }
-            appImage.run('-p 8090:8090 --name petclinic').inside('-u root') {
-                sh 'java -Djava.awt.headless=true -jar /app/target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090'
+            sh 'docker build -t petclinic target/'
+            sh 'docker run -d -p 8090:8090 --name petclinic petclinic'
+            timeout(time: 1, unit: 'MINUTES') {
+                waitUntil {
+                    script {
+                        def result = sh(script: 'curl --silent --fail http://172.19.0.3:8090', returnStatus: true)
+                        return (result == 0)
+                    }
+                }
             }
         }
     }
 }
+
 
 
 
