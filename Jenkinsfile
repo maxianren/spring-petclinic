@@ -2,52 +2,16 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
         stage('Build') {
             steps {
-                withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}"]) {
-                    sh 'mvn clean install -DskipTests'
-                }
+                sh 'mvn clean install'
             }
         }
 
-        stage('Static Analysis with SonarQube') {
+        stage('Deploy') {
             steps {
-                script {
-                    def scannerHome = tool 'SonarQube'
-                    withSonarQubeEnv('SonarQube') {
-                        // nodejs(nodeJSInstallationName: 'NodeJS 14.x') {
-                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=sqa_0b53b8ba19a9c540794f92039898753f17458859 \
-                            -Dsonar.projectKey=mycompany:myproject \
-                            -Dsonar.java.binaries=target/classes"
-                        }
-                    // }
-                }
+                sh 'ansible-playbook -i inventory.ini deploy_petclinic.yml'
             }
         }
-stage('Run PetClinic') {
-    steps {
-        withEnv(["JAVA_HOME=${tool 'OpenJDK-17'}", "PATH=${tool 'OpenJDK-17'}/bin:$PATH", "BUILD_ID=dontKillMe"]) {
-            sh 'nohup java -Djava.awt.headless=true -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar --server.port=8090 > output.log 2>&1 &'
-        }
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-    }
-
 }

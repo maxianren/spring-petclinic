@@ -1,48 +1,24 @@
-# version: "2.2"
-# 
-# services:
-#   mysql:
-#     image: mysql:8.0
-#     ports:
-#       - "3306:3306"
-#     environment:
-#       - MYSQL_ROOT_PASSWORD=
-#       - MYSQL_ALLOW_EMPTY_PASSWORD=true
-#       - MYSQL_USER=petclinic
-#       - MYSQL_PASSWORD=petclinic
-#       - MYSQL_DATABASE=petclinic
-#     volumes:
-#       - "./conf.d:/etc/mysql/conf.d:ro"
-#   postgres:
-#     image: postgres:15.2
-#     ports:
-#       - "5432:5432"
-#     environment:
-#       - POSTGRES_PASSWORD=petclinic
-#       - POSTGRES_USER=petclinic
-#       - POSTGRES_DB=petclinic
-
-version: '3.7'
-
+version: '3'
 services:
   jenkins:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
+    container_name: jenkins_ansible
     ports:
-      - 8080:8080
-      - 8090:8090
+      - "8080:8080"
+      - "50000:50000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins-data:/var/jenkins_home
+      # - /maven_project:/var/jenkins_home/workspace/maven_project
 
-  sonarqube:
-    image: sonarqube:lts
+  web_server:
+    image: nginx
+    container_name: web_server
     ports:
-      - 9000:9000
-    environment:
-      - sonar.jdbc.username=sonar
-      - sonar.jdbc.password=sonar
+      - "80:80"
+    volumes:
+      - web_server_data:/usr/share/nginx/html
 
 volumes:
-  postgres-data:
-
+  jenkins-data:
+  web_server_data:
